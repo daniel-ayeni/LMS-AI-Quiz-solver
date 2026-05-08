@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Not Working? - Use Iframe Version</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #f5576c; margin-bottom: 20px; }
+        .step {
+            background: #fff3f3;
+            border-left: 4px solid #f5576c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .step-number {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        code {
+            background: #f1f3f5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+        .button {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 10px 10px 0;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+        .button:hover {
+            background: #e04858;
+            transform: translateY(-2px);
+        }
+        img {
+            max-width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .alert {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Quiz Not Being Answered? Use Iframe Method!</h1>
+        <p style="color: #666; font-size: 1.1em; margin-bottom: 30px;">
+            If the Next button works but quizzes aren't being answered, the quiz is in a cross-origin iframe. 
+            Follow these steps to run the script INSIDE the iframe:
+        </p>
+
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Open Browser Console</strong>
+            <p style="margin: 10px 0 0 50px;">Press <code>F12</code> to open Developer Tools</p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>Switch to H5P Iframe Context</strong>
+            <p style="margin: 10px 0 10px 50px;">
+                At the top of the Console tab, you'll see a dropdown that says <code>top</code>
+            </p>
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 100'%3E%3Crect fill='%23f8f9fa' width='400' height='100'/%3E%3Ctext x='20' y='50' font-family='Arial' font-size='16' fill='%23333'%3E▼ top%3C/text%3E%3Ctext x='20' y='75' font-family='Arial' font-size='14' fill='%23666'%3E   ↳ iframe (h5p_embed)%3C/text%3E%3C/svg%3E" alt="Console dropdown">
+            <p style="margin: 10px 0 0 50px;">
+                Click it and select the iframe that contains <strong>"h5p_embed"</strong> in the URL
+            </p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">3</span>
+            <strong>Copy the Iframe Script</strong>
+            <p style="margin: 10px 0 10px 50px;">Click this button to copy:</p>
+            <button class="button" onclick="copyIframeScript()" style="margin-left: 50px;">
+                📋 Copy Iframe Quiz Script
+            </button>
+            <p id="copyStatus" style="margin: 10px 0 0 50px; color: #28a745; font-weight: bold;"></p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">4</span>
+            <strong>Paste and Run</strong>
+            <p style="margin: 10px 0 0 50px;">
+                Paste the script in the console (make sure you're in the iframe context!) and press Enter
+            </p>
+        </div>
+
+        <div class="step">
+            <span class="step-number">5</span>
+            <strong>See It Work!</strong>
+            <p style="margin: 10px 0 0 50px;">You should see:</p>
+            <div style="margin: 10px 0 0 50px; background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 8px; font-family: monospace;">
+🎯 LMS Quiz Helper (Iframe Mode) Started!<br>
+ℹ️ Monitoring for quizzes...<br>
+🎯 Quiz detected!<br>
+ℹ️ Attempt 1<br>
+✅ Correct!<br>
+✅ Clicked continue
+            </div>
+        </div>
+
+        <div class="alert">
+            <strong>⚠️ Important:</strong> You need to do this for EACH video/topic. When you click Next and go to a new video, 
+            the iframe reloads, so you'll need to switch to the iframe context and paste the script again.
+        </div>
+
+        <h2 style="margin-top: 40px; color: #2d3748;">💡 Why This Happens</h2>
+        <p style="margin: 15px 0;">
+            The quiz is inside an iframe from a different domain (<code>content.yourhippo.com</code>) than the main page 
+            (<code>lms.yourhippo.com</code>). Browsers block scripts from accessing cross-origin iframes for security.
+        </p>
+        <p style="margin: 15px 0;">
+            By running the script INSIDE the iframe, it has direct access to the quiz elements.
+        </p>
+
+        <h2 style="margin-top: 40px; color: #2d3748;">🔄 Alternative: Simpler Bookmarklet</h2>
+        <p style="margin: 15px 0;">
+            For easier reuse, create a bookmarklet for the iframe script:
+        </p>
+        <ol style="margin: 15px 0 0 20px; line-height: 1.8;">
+            <li>Right-click your bookmarks bar</li>
+            <li>Add new bookmark</li>
+            <li>Name: <code>Quiz Helper (Iframe)</code></li>
+            <li>URL: <code style="font-size: 11px; word-break: break-all;">javascript:(function(){fetch('https://video-tutor-4.preview.emergentagent.com/lms_quiz_iframe.js').then(r=>r.text()).then(eval);})();</code></li>
+        </ol>
+        <p style="margin: 15px 0;">
+            Then: Switch to iframe context → Click bookmarklet → Done!
+        </p>
+
+        <div style="margin-top: 40px; text-align: center; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <a href="/helper.html" class="button">← Back to Main Helper</a>
+            <a href="/lms_quiz_iframe.js" class="button" target="_blank">📄 View Iframe Script</a>
+        </div>
+    </div>
+
+    <script>
+        async function copyIframeScript() {
+            try {
+                const response = await fetch('/lms_quiz_iframe.js');
+                const script = await response.text();
+                await navigator.clipboard.writeText(script);
+                document.getElementById('copyStatus').textContent = '✅ Copied! Now switch to iframe context in console and paste it';
+                setTimeout(() => {
+                    document.getElementById('copyStatus').textContent = '';
+                }, 8000);
+            } catch (error) {
+                alert('Failed to copy. Please visit: https://video-tutor-4.preview.emergentagent.com/lms_quiz_iframe.js');
+            }
+        }
+    </script>
+</body>
+</html>
